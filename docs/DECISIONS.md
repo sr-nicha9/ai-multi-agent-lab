@@ -53,3 +53,29 @@ Brand Strategist เสนอให้ตัดคำลดทอนตัวเ
 - `## Headline` — เปลี่ยนเป็นข้อความตาม **D1**
 - `## Tone` — เพิ่มกติกา 2 บรรทัด: ห้ามคำลดทอนตัวเอง (**D2**) และห้ามคำสัญญาที่พิสูจน์ผิดได้ (**D10**)
 - ไม่แตะ `## Bio` · `## Interests` · `## Contact` ในรอบนี้ — การเรียบเรียงจริงเป็นงาน Lab 04 ตาม D2/D12 (open loop L9)
+
+---
+
+## Lab 03 — Issues ที่สร้างจาก Decisions
+
+repo: `sr-nicha9/ai-multi-agent-lab` (learner repo) · สร้างผ่าน **GitHub MCP** ทั้ง 7 ใบ · ตรวจซ้ำด้วย `gh issue list`
+
+| Issue # | Title | มาจาก Decision | Owner | ปิดโดย Lab |
+|---|---|---|---|---|
+| [#1](https://github.com/sr-nicha9/ai-multi-agent-lab/issues/1) | หน้าแรกต้องไม่ render ค่า audience ออกไปให้ผู้ชมเห็น | **D4** | Claude `frontend` | 04 · **P0** |
+| [#2](https://github.com/sr-nicha9/ai-multi-agent-lab/issues/2) | Guestbook: เลิกใช้ innerHTML และปิดการเขียนใน v1 | **D5 + D6** | Claude `frontend` (+ validate = OpenCode) | 04 · **P0** |
+| [#3](https://github.com/sr-nicha9/ai-multi-agent-lab/issues/3) | API ห้ามส่ง error ดิบ · UI แปลรหัสเป็นภาษาคนและแยก 501 จาก 400 | **D7 + D8** | OpenCode `backend` + Claude `frontend` | 04 / 05 |
+| [#4](https://github.com/sr-nicha9/ai-multi-agent-lab/issues/4) | เขียน Interests เป็น `หัวข้อ — คำขยาย` และเรียบเรียง Bio ตามกติกา tone | **D2 + D12** | Claude `frontend` | 04 |
+| [#5](https://github.com/sr-nicha9/ai-multi-agent-lab/issues/5) | โครงเว็บ 4 หน้า CTA เดียว และมุมเล่าเรื่องหน้า About | **D3 + D11** | Claude `frontend` | 04 |
+| [#6](https://github.com/sr-nicha9/ai-multi-agent-lab/issues/6) | เกณฑ์ a11y และ metadata ต่อหน้า | **D14** | Claude `frontend` | 04 / 06 |
+| [#7](https://github.com/sr-nicha9/ai-multi-agent-lab/issues/7) | ตัดสินใจ repo public หรือ private ก่อนเปิดลิงก์ GitHub บนเว็บ | **D13** | เจ้าของเว็บ (human) | ก่อน 08 |
+
+Decision ที่ยังไม่มี issue ของตัวเอง: **D1** (Headline แก้ลง PROFILE ไปแล้ว ไม่มีงานค้าง) · **D9** และ **D10** เป็นกติกาที่ฝังอยู่ใน acceptance ของ #3, #4 และ #5 แทนที่จะแยกเป็นใบ
+
+## Lab 03 — MCP vs gh
+
+- **ความเร็ว** — MCP เร็วกว่าชัดเจนตอนสร้าง issue ที่ body ยาวและเป็นภาษาไทยหลายย่อหน้า เพราะส่ง title/body/labels เป็นข้อมูลไปตรง ๆ ไม่ต้องผ่าน quoting ของ shell ส่วน `gh` ต้องเขียน body ลงไฟล์แล้วใช้ `--body-file` ไม่งั้นบรรทัดใหม่และอักขระพิเศษบน Windows PowerShell จะเพี้ยน
+- **สิทธิ์** — ทั้งสองทางใช้ PAT ตัวเดียวกัน แต่คนละเส้นทาง: `gh` อ่านจาก `gh auth` ที่ login ไว้แล้ว ส่วน MCP ต้องมี `GITHUB_PERSONAL_ACCESS_TOKEN` ใน environment ตอนเปิด CLI · ถ้า MCP ตอบ 401 ให้หยุดทันทีและไปตรวจ PAT ห้ามเดาว่าสร้างสำเร็จ · token ไม่เคยถูกพิมพ์ลงเอกสารหรือ issue body
+- **Audit trail** — MCP คืน id และ URL กลับมาในผลลัพธ์ ใช้อ้างในเอกสารได้ทันที แต่ถ้าเชื่อผลลัพธ์อย่างเดียวจะแยกไม่ออกระหว่าง "สร้างจริง" กับ "โมเดลรายงานว่าสร้าง" — ตารางด้านบนจึงตรวจซ้ำด้วย `gh issue list` ซึ่งเป็นคนละเส้นทาง
+- **ข้อผิดพลาดที่เจอ** — ไม่เจอ 401 หรือ error จาก MCP ในรอบนี้ · จุดที่ต้องระวังจริงคือการสร้าง issue ซ้ำ เพราะ MCP ไม่เตือนเรื่องชื่อซ้ำให้ ต้อง `list_issues` ดูก่อนเสมอ (รอบนี้ list แล้วได้ 0 ใบ จึงสร้างได้ปลอดภัย) · อีกจุดคือ label ที่ไม่มีใน repo จะทำให้คำขอล้ม — เช็ก `gh label list` ก่อนแล้วใช้เฉพาะที่มีจริง (repo นี้ไม่มี label `security` จึงใช้ `bug` กับข้อ P0 แทน)
+- **เมื่อไหร่ใช้อะไร** — ใช้ **MCP** เมื่อ agent เป็นคนร่างเนื้อหาเองและต้องสร้างหลายใบรวดเดียวจากเอกสาร · ใช้ **`gh`** เมื่อคนเป็นคนตัดสินใจทีละใบ ตอนตรวจสอบผลของ agent และตอนทำงานที่ไม่อยากให้ agent แตะ (เช่นปิด/ลบ issue) · หลักของคอร์สคือ MCP ใช้กับงานผลิต ไม่ใช่ท่อส่งงานระหว่าง Claude กับ OpenCode

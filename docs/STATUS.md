@@ -3,12 +3,12 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 +07:00 (ปิด Lab 02 — DECISIONS D1–D14)
+Last updated: 2026-09-25 +07:00 (ปิด Lab 03 — issues #1–#7)
 Updated by: Claude
 
 ## Current goal
 
-- Lab 04 — Frontend ตาม `docs/DECISIONS.md` · **ต้องปิด L6 + L7 (P0) ก่อนให้คนนอกเห็นเว็บ** — ดู "เกณฑ์พร้อม Frontend" ท้าย DECISIONS
+- Lab 04 — Frontend ตาม `docs/DECISIONS.md` · **ต้องปิด issue #1 + #2 (P0) ก่อนให้คนนอกเห็นเว็บ** — ดู "เกณฑ์พร้อม Frontend" ท้าย DECISIONS
 
 ## Done
 
@@ -17,6 +17,8 @@ Updated by: Claude
 - แก้ `scripts/preflight.ps1` — em dash (—) ในไฟล์ UTF-8 ไม่มี BOM ทำให้ Windows PowerShell 5.1 parse พัง · เปลี่ยนเป็น `-` แล้ว preflight PASSED
 - Brainstorm ก่อน Lab 02 — ขยายไอเดียจาก PROFILE แล้วบันทึกเป็นหัวข้อ `## Brainstorm` ใน `docs/PROFILE.md` (Must/Nice/Later 10 ข้อ · มุมเล่าเรื่องหน้า About 3 แบบ · สิ่งที่ควรหลีกเลี่ยงด้าน privacy และ scope) · ยังเป็น Proposed ยังไม่ปิดเป็น D-id
 - **L3 ปิดแล้ว** — แก้ parser `src/lib/profile.ts` ด้วย TDD: เขียน `tests/profile.test.ts` ก่อน (แดง 5 เคส · `expected 'First paragraph.' to contain 'Second paragraph.'`) แยก `parseProfile(markdown)` ออกจาก `loadProfile()` เพื่อเทสต์ได้โดยไม่แตะดิสก์ แล้วตัด flag `m` ออกจาก regex · `npm test` เขียว 12/12 (3 ไฟล์) · `npm run build` ผ่าน · Bio ได้ครบ 4 ย่อหน้า · Interests ครบ 4 ข้อ
+
+- Lab 03 — แปลง `docs/DECISIONS.md` เป็น GitHub issues 7 ใบใน `sr-nicha9/ai-multi-agent-lab` ผ่าน GitHub MCP · ตรวจซ้ำด้วย `gh issue list` · เขียน `## Lab 03 — Issues ที่สร้างจาก Decisions` และ `## Lab 03 — MCP vs gh` ท้าย DECISIONS · ผูก issue number เข้ากับ open loops แล้ว
 
 ## In progress
 
@@ -28,9 +30,10 @@ Updated by: Claude
 
 ## Next actions
 
-1. Lab 04 — ปิด **L6** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) และ **L7** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) ก่อนงาน copy ทั้งหมด — สองข้อนี้เป็น P0
-2. Lab 04 — ดึง PROFILE ขึ้นหน้าเว็บตาม D11/D12 · ระหว่างทางปิด L5 (split Bio เป็นหลาย `<p>`) และ L9
-3. commit งานที่ค้างใน working tree ก่อนสลับ harness
+1. `git push` — local นำหน้า origin อยู่ · issues อ้าง `docs/DECISIONS.md` ที่ยังไม่ขึ้น remote
+2. Lab 04 — ปิด **issue #1** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) และ **issue #2** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) ก่อนงาน copy ทั้งหมด — สองใบนี้เป็น P0
+3. Lab 04 — ปิด #4 #5 #6 ต่อ · #3 ฝั่ง UI ทำได้เลย ฝั่ง API รอ Lab 05 (OpenCode)
+4. #7 รอเจ้าของตัดสิน repo public/private — agent ตัดสินแทนไม่ได้
 
 ## Files changed in latest session
 
@@ -38,6 +41,7 @@ Updated by: Claude
 - `docs/DEBATE.md` — เขียนใหม่ทั้งไฟล์: ลำดับการพูด 5 รอบ + `## Brand Strategist` · `## UX Critic` · `## Devil's Advocate` + ประเด็นที่ยังไม่ปิด
 - `.claude/agents/brand-strategist.md` · `ux-critic.md` · `devils-advocate.md` (ใหม่ · `memory: project`)
 - `.claude/agent-memory/{brand-strategist,ux-critic,devils-advocate}/lab-02-debate.md` (ใหม่) — ความจำข้ามเซสชันของแต่ละบทบาท
+- Lab 03: `docs/DECISIONS.md` (เพิ่ม 2 หัวข้อท้ายไฟล์) · `docs/OPEN_LOOPS.md` (เพิ่มคอลัมน์ Issue)
 - `docs/PROFILE.md` — แก้ `## Headline` (D1) และเพิ่มกติกา 2 ข้อใน `## Tone` (D2, D10) · `npm test` เขียว 12/12 หลังแก้
 - `docs/STATUS.md` · `docs/OPEN_LOOPS.md` (ปิด L4 · เปิด L6–L9 · ยก L2 เป็น P1)
 - ค้างจากรอบก่อน ยังไม่ commit: `scripts/preflight.ps1` (em dash → `-`)

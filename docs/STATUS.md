@@ -3,12 +3,12 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 +07:00 (ปิด Lab 03 — issues #1–#7)
+Last updated: 2026-09-25 +07:00 (ปิด Lab 04 — UI + handoff ให้ OpenCode)
 Updated by: Claude
 
 ## Current goal
 
-- Lab 04 — Frontend ตาม `docs/DECISIONS.md` · **ต้องปิด issue #1 + #2 (P0) ก่อนให้คนนอกเห็นเว็บ** — ดู "เกณฑ์พร้อม Frontend" ท้าย DECISIONS
+- Lab 05 — OpenCode implement `insertContact` + สัญญา error ตาม `docs/handoffs/04-claude-to-opencode.md` และ `docs/fe-be-contract-check.md`
 
 ## Done
 
@@ -19,6 +19,7 @@ Updated by: Claude
 - **L3 ปิดแล้ว** — แก้ parser `src/lib/profile.ts` ด้วย TDD: เขียน `tests/profile.test.ts` ก่อน (แดง 5 เคส · `expected 'First paragraph.' to contain 'Second paragraph.'`) แยก `parseProfile(markdown)` ออกจาก `loadProfile()` เพื่อเทสต์ได้โดยไม่แตะดิสก์ แล้วตัด flag `m` ออกจาก regex · `npm test` เขียว 12/12 (3 ไฟล์) · `npm run build` ผ่าน · Bio ได้ครบ 4 ย่อหน้า · Interests ครบ 4 ข้อ
 
 - Lab 03 — แปลง `docs/DECISIONS.md` เป็น GitHub issues 7 ใบใน `sr-nicha9/ai-multi-agent-lab` ผ่าน GitHub MCP · ตรวจซ้ำด้วย `gh issue list` · เขียน `## Lab 03 — Issues ที่สร้างจาก Decisions` และ `## Lab 03 — MCP vs gh` ท้าย DECISIONS · ผูก issue number เข้ากับ open loops แล้ว
+- **Lab 04 — UI ครบ 4 หน้าบน branch `lab-04-frontend`** · ปิด P0 ทั้งสองข้อ (issue #1 audience · issue #2 guestbook/`innerHTML`) และ #4 #5 #6 · ฝั่ง UI ของ #3 ปิดแล้วเช่นกัน · เขียน guardrail `tests/ui-guardrails.test.ts` แบบ TDD (แดง 6/6 ก่อนแก้) · call ข้าม harness ให้ OpenCode ตรวจสัญญา API → `docs/fe-be-contract-check.md` (เจอ mismatch 3 จุด อยู่ฝั่ง backend ทั้งหมด) · เขียน handoff แล้ว · **ยังไม่ได้ push และยังไม่ได้เปิด PR**
 
 ## In progress
 
@@ -30,28 +31,32 @@ Updated by: Claude
 
 ## Next actions
 
-1. `git push` — local นำหน้า origin อยู่ · issues อ้าง `docs/DECISIONS.md` ที่ยังไม่ขึ้น remote
-2. Lab 04 — ปิด **issue #1** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) และ **issue #2** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) ก่อนงาน copy ทั้งหมด — สองใบนี้เป็น P0
-3. Lab 04 — ปิด #4 #5 #6 ต่อ · #3 ฝั่ง UI ทำได้เลย ฝั่ง API รอ Lab 05 (OpenCode)
-4. #7 รอเจ้าของตัดสิน repo public/private — agent ตัดสินแทนไม่ได้
+1. **OpenCode (Lab 05)** — อ่าน `docs/handoffs/04-claude-to-opencode.md` แล้ว implement ตาม request: `insertContact` + validate · แก้ M1/M2 (error body + แยก 500 จาก 400) · ไม่เปิด guestbook (M3)
+2. Claude — เปิด PR ของ branch `lab-04-frontend` (ต้อง push ก่อน) อ้าง issue #1 #2 #4 #5 #6
+3. #7 (repo public/private) ยังรอเจ้าของตัดสิน — ไม่บล็อก Lab 05
 
 ## Files changed in latest session
 
-- `docs/DECISIONS.md` (ใหม่) — D1–D14 ปิดจาก debate สามมุม · มี Out of scope v1 และเกณฑ์พร้อม Frontend
-- `docs/DEBATE.md` — เขียนใหม่ทั้งไฟล์: ลำดับการพูด 5 รอบ + `## Brand Strategist` · `## UX Critic` · `## Devil's Advocate` + ประเด็นที่ยังไม่ปิด
-- `.claude/agents/brand-strategist.md` · `ux-critic.md` · `devils-advocate.md` (ใหม่ · `memory: project`)
-- `.claude/agent-memory/{brand-strategist,ux-critic,devils-advocate}/lab-02-debate.md` (ใหม่) — ความจำข้ามเซสชันของแต่ละบทบาท
-- Lab 03: `docs/DECISIONS.md` (เพิ่ม 2 หัวข้อท้ายไฟล์) · `docs/OPEN_LOOPS.md` (เพิ่มคอลัมน์ Issue)
-- `docs/PROFILE.md` — แก้ `## Headline` (D1) และเพิ่มกติกา 2 ข้อใน `## Tone` (D2, D10) · `npm test` เขียว 12/12 หลังแก้
-- `docs/STATUS.md` · `docs/OPEN_LOOPS.md` (ปิด L4 · เปิด L6–L9 · ยก L2 เป็น P1)
-- ค้างจากรอบก่อน ยังไม่ commit: `scripts/preflight.ps1` (em dash → `-`)
-- `opencode.json` เป็น untracked — **ห้าม commit** ถ้ามี token อยู่ข้างใน
+Lab 04 (branch `lab-04-frontend`):
+
+- `src/layouts/BaseLayout.astro` — nav เหลือ 4 หน้า (ตัด guestbook ตาม D5) · ธีมน้ำเงินเข้มบนพื้นสว่างตาม `## Tone` (เดิมเป็นธีมมืด) · meta description ปริยายเลิกพูดถึงคอร์ส · `:focus-visible`
+- `src/pages/index.astro` · `about.astro` · `interests.astro` · `contact.astro` · `guestbook.astro`
+- `src/lib/profile.ts` — `FALLBACK.audience` ไม่ใช่ข้อความหางานอีก (ไม่แตะ parser)
+- `docs/PROFILE.md` — `## Bio` ย่อหน้า 2–4 และ `## Interests` ตาม D2/D12
+- `tests/ui-guardrails.test.ts` (ใหม่ · 6 เคส) — คุม D4/D5/D6/D7
+- `docs/fe-be-contract-check.md` (ใหม่ · **OpenCode เขียนผ่าน `opencode run`**) · `docs/handoffs/04-claude-to-opencode.md` (ใหม่)
+- `.gitignore` — ignore `.playwright-mcp/`
 
 ## Notes
 
+- **Lab 04 verification:** `npm test` 18/18 เขียว (4 ไฟล์) · `npm run build` ผ่าน · เปิดจริงด้วย Playwright ทั้ง 5 route ได้ 200 · กดส่งฟอร์ม Contact จริงแล้วเห็น "ฟอร์มยังไม่เปิดใช้งาน" แทนข้อความดิบจาก API
+- guardrail ใหม่ถูกตรวจย้อนกับโค้ดก่อนแก้ — ยืนยันว่าจับบั๊กเดิมได้ 4/4 ไม่ใช่เทสต์ที่ผ่านเปล่า
+- **Lab 04 เบี่ยงจาก template หนึ่งข้อ:** เกณฑ์ของ lab เขียนว่า nav ต้องมีลิงก์ Guestbook แต่ **D5** สั่งให้เอาออก — ทำตาม D5 เพราะ prompt ของ lab เองบอกให้ยึด `docs/DECISIONS.md`
+- Writer ถัดไปของ STATUS/OPEN_LOOPS = **OpenCode**
+
 - Proposed vs Approved: ที่ยังถกไม่จบอยู่ใน `DEBATE.md` — ที่ปิดแล้วอยู่ใน `DECISIONS.md`
 - **Latest D-id = D14**
-- พบของจริงตอน debate (ยังไม่แก้ · เป็น L6/L7/L8): `guestbook.astro:29` ใช้ `innerHTML` โดยไม่ escape · `index.astro:13` render `Audience:` · API คืน `err.message` ดิบจนคำว่า "Lab 05 OpenCode" โผล่บนหน้าเว็บ
+- ของจริงที่ debate เจอ — `guestbook.astro` `innerHTML` และ `index.astro` `Audience:` **แก้แล้วใน Lab 04** · ที่ยังเหลือคือฝั่ง API คืน `err.message` ดิบ (L8 · เป็นของ OpenCode)
 - `tests/public-site.test.ts` สแกนแค่ static markup — จับข้อความ error ตอน runtime และค่า FALLBACK ไม่ได้ (D8)
 - `PROFILE.md` มีหัวข้อ `## ไม่เผยแพร่บนเว็บ` เป็น guardrail — อ่านก่อนทำ UI
 - L3 เคยถูกบันทึกว่าปิดเมื่อ 2026-09-24 แต่การแก้ไม่เคยอยู่ใน working tree — รอบนี้แก้จริงแล้วและมีเทสต์คุม · **ต้อง commit ก่อนสลับ harness** ไม่งั้นจะหายซ้ำรอยเดิม

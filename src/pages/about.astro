@@ -3,12 +3,24 @@ export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 const profile = loadProfile();
+// Split on blank lines so a multi-paragraph Bio keeps its paragraphs instead
+// of collapsing into one block of text.
+const paragraphs = profile.bio.split(/\n{2,}/).filter(Boolean);
 ---
-<BaseLayout title={`About · ${profile.name}`}>
+<BaseLayout
+  title={`About · ${profile.name}`}
+  description="วิธีทำงาน การใช้ AI ในงานจริง และการส่งงานให้คนอื่นทำต่อได้"
+>
   <article class="card">
     <h1>About</h1>
-    <p>{profile.bio}</p>
-    <p>เรื่องราวเพิ่มเติม — timeline, skills และลิงก์จะอัปเดตเร็ว ๆ นี้</p>
+    {paragraphs.map((text) => <p>{text}</p>)}
   </article>
+  <section class="card">
+    <h2>ทำงานด้วยกันได้อย่างไร</h2>
+    <p>
+      งานจบที่การส่งต่อ ไม่ใช่ที่โค้ดรันได้ — สิ่งที่ตัดสินใจไว้ถูกเขียนเป็นเอกสาร
+      งานถูกแตกเป็นชิ้นที่ปิดได้ และคนที่รับช่วงต่ออ่านแล้วทำต่อได้เลย
+    </p>
+    <p><a href="/contact">คุยรายละเอียดงาน →</a></p>
+  </section>
 </BaseLayout>
-

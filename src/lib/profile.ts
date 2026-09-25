@@ -22,7 +22,9 @@ export const FALLBACK: Profile = {
   name: 'Your Name',
   headline: 'Personal branding site',
   bio: 'This personal site is still being built — content is coming soon.',
-  audience: 'Hiring managers / peers / community',
+  // Internal note about who the copy is written for (D4). Never rendered, but
+  // kept neutral so a leak would not announce that the owner is job hunting.
+  audience: 'ผู้อ่านทั่วไปของเว็บนี้',
   interests: ['AI agents', 'Web', 'Teaching'],
 };
 

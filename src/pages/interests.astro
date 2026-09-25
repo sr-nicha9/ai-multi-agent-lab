@@ -3,14 +3,28 @@ export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
 const profile = loadProfile();
+// Items are written as "หัวข้อ — คำขยาย" (D12). The data contract stays
+// string[]; only the display splits them. An item without the dash still works.
+const items = profile.interests.map((raw) => {
+  const [title, ...rest] = raw.split('—');
+  return { title: title.trim(), detail: rest.join('—').trim() };
+});
 ---
-<BaseLayout title={`Interests · ${profile.name}`}>
+<BaseLayout
+  title={`Interests · ${profile.name}`}
+  description="หัวข้อที่ทำได้จริง — AI agents, automation, ระบบและเว็บแอป"
+>
   <section class="card">
     <h1>Interests</h1>
+    <p>สิ่งที่ทำบ่อยและรับทำได้</p>
     <ul>
-      {profile.interests.map((item) => <li>{item}</li>)}
+      {items.map((item) => (
+        <li>
+          <span class="interest-title">{item.title}</span>
+          {item.detail && <span>{item.detail}</span>}
+        </li>
+      ))}
     </ul>
-    <p>อัปเดตรายการสิ่งที่สนใจเร็ว ๆ นี้</p>
+    <p><a href="/contact">มีงานลักษณะนี้อยู่? ส่งรายละเอียดมาได้ →</a></p>
   </section>
 </BaseLayout>
-

@@ -1,11 +1,16 @@
 ---
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadProfile } from '../lib/profile';
+const profile = loadProfile();
 ---
-<BaseLayout title="Contact">
+<BaseLayout
+  title={`Contact · ${profile.name}`}
+  description="ส่งข้อความถึง Nichanan ได้โดยตรงผ่านฟอร์มติดต่อบนหน้านี้"
+>
   <section class="card">
     <h1>Contact</h1>
-    <p>ฟอร์มนี้โพสต์ไปที่ <code>POST /api/contact</code></p>
+    <p>อยากคุยเรื่องงาน โปรเจกต์ หรือมีคำถาม — ฝากข้อความไว้ได้เลย จะติดต่อกลับทางอีเมลที่กรอกไว้</p>
     <form id="contact-form">
       <label for="name">Name</label>
       <input id="name" name="name" required maxlength="80" />
@@ -13,31 +18,62 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <input id="email" name="email" type="email" required maxlength="120" />
       <label for="message">Message</label>
       <textarea id="message" name="message" rows="5" required maxlength="2000"></textarea>
-      <p style="margin-top:1rem"><button type="submit">Send</button></p>
+      <p style="margin-top:1rem"><button id="contact-submit" type="submit">Send</button></p>
       <p id="status" role="status" aria-live="polite"></p>
     </form>
   </section>
 </BaseLayout>
 <script>
-  const form = document.getElementById('contact-form');
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const status = document.getElementById('status');
+  const submit = document.getElementById('contact-submit') as HTMLButtonElement | null;
+
+  /**
+   * D7/D8: the API only returns short codes (NOT_IMPLEMENTED / VALIDATION /
+   * INTERNAL). Never print the raw code or the HTTP status to a visitor —
+   * translate it here. Unknown codes fall back to the generic message.
+   */
+  const ERROR_TEXT: Record<string, string> = {
+    NOT_IMPLEMENTED: 'ขออภัย ฟอร์มยังไม่เปิดใช้งาน กรุณาลองใหม่ภายหลัง',
+    VALIDATION: 'กรอกข้อมูลไม่ครบหรือรูปแบบไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง',
+    INTERNAL: 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง',
+  };
+  const GENERIC_ERROR = ERROR_TEXT.INTERNAL;
+
+  function messageFor(code: unknown, httpStatus: number): string {
+    if (typeof code === 'string' && ERROR_TEXT[code]) return ERROR_TEXT[code];
+    // Response body was missing, not JSON, or an unknown code (e.g. a proxy
+    // error page). Map by status so the visitor still gets useful copy.
+    if (httpStatus === 501) return ERROR_TEXT.NOT_IMPLEMENTED;
+    if (httpStatus === 400) return ERROR_TEXT.VALIDATION;
+    return GENERIC_ERROR;
+  }
+
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const fd = new FormData(form);
     const payload = Object.fromEntries(fd.entries());
-    status.textContent = 'Sending…';
+    if (status) status.textContent = 'กำลังส่งข้อความ…';
+    if (submit) submit.disabled = true;
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      const data = await res.json();
-      status.textContent = res.ok ? 'Sent. Thank you!' : `Error: ${data.error || res.status}`;
-      if (res.ok) form.reset();
+      // A non-JSON body (proxy/gateway error page) must not throw and leave
+      // the visitor staring at an empty status line.
+      const data = await res.json().catch(() => null);
+      if (res.ok) {
+        if (status) status.textContent = 'ส่งข้อความเรียบร้อยแล้ว ขอบคุณมากค่ะ';
+        form.reset();
+      } else if (status) {
+        status.textContent = messageFor(data && (data as any).error, res.status);
+      }
     } catch (err) {
-      status.textContent = 'Network error';
+      if (status) status.textContent = 'เชื่อมต่อไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่อีกครั้ง';
+    } finally {
+      if (submit) submit.disabled = false;
     }
   });
 </script>
-

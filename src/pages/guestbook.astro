@@ -2,45 +2,76 @@
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Guestbook">
+<BaseLayout
+  title="สมุดเยี่ยม"
+  description="ข้อความจากผู้เยี่ยมชมที่ฝากไว้ก่อนหน้านี้ — อ่านอย่างเดียว"
+>
   <section class="card">
-    <h1>Guestbook</h1>
-    <p>ฝากข้อความไว้ได้ทางฟอร์มนี้ — อ่าน/เขียนผ่าน <code>/api/guestbook</code></p>
-    <form id="gb-form">
-      <label for="name">Name</label>
-      <input id="name" name="name" required maxlength="80" />
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="3" required maxlength="500"></textarea>
-      <p style="margin-top:1rem"><button type="submit">Sign</button></p>
-    </form>
-    <div id="entries" class="card" style="margin-top:1.25rem" aria-live="polite">Loading…</div>
+    <h1>สมุดเยี่ยม</h1>
+    <p>รวมข้อความที่ผู้เยี่ยมชมเคยฝากไว้ ตอนนี้เปิดให้อ่านอย่างเดียว ยังไม่เปิดให้เขียนใหม่ หากอยากติดต่อ ใช้ฟอร์มในหน้า <a href="/contact">ติดต่อ</a> ได้เลย</p>
+    <div id="entries" class="card" style="margin-top:1.25rem" aria-live="polite">กำลังโหลด…</div>
   </section>
 </BaseLayout>
 <script>
+  // D5: read-only in v1 (no write form) · D6: build nodes with DOM API + textContent only
+  type Entry = { name?: string; message?: string; created_at?: string };
+
   const entries = document.getElementById('entries');
-  const form = document.getElementById('gb-form');
-  async function load() {
-    const res = await fetch('/api/guestbook');
-    const data = await res.json();
-    if (!res.ok) {
-      entries.textContent = data.error || `HTTP ${res.status}`;
+
+  const ERROR_TEXT: Record<string, string> = {
+    NOT_IMPLEMENTED: 'ฟอร์มยังไม่เปิดใช้งาน',
+    VALIDATION: 'กรอกข้อมูลไม่ครบ',
+    INTERNAL: 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง',
+  };
+  const FALLBACK_ERROR = 'ตอนนี้ยังแสดงข้อความไม่ได้ ลองใหม่อีกครั้ง';
+
+  function messageFor(code: unknown): string {
+    return typeof code === 'string' && ERROR_TEXT[code] ? ERROR_TEXT[code] : FALLBACK_ERROR;
+  }
+
+  function showText(target: HTMLElement, text: string): void {
+    target.replaceChildren();
+    const p = document.createElement('p');
+    p.textContent = text;
+    target.appendChild(p);
+  }
+
+  function renderEntries(target: HTMLElement, list: Entry[]): void {
+    if (list.length === 0) {
+      showText(target, 'ยังไม่มีข้อความ');
       return;
     }
-    entries.innerHTML = (data.entries || [])
-      .map((e) => `<p><strong>${e.name}</strong>: ${e.message}<br/><small>${e.created_at}</small></p>`)
-      .join('') || '<p>No entries yet.</p>';
-  }
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const payload = Object.fromEntries(new FormData(form).entries());
-    await fetch('/api/guestbook', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    form.reset();
-    await load();
-  });
-  load();
-</script>
+    target.replaceChildren();
+    for (const entry of list) {
+      const item = document.createElement('p');
 
+      const name = document.createElement('strong');
+      name.textContent = String(entry.name ?? '');
+      item.appendChild(name);
+      item.appendChild(document.createTextNode(': ' + String(entry.message ?? '')));
+      item.appendChild(document.createElement('br'));
+
+      const when = document.createElement('small');
+      when.textContent = String(entry.created_at ?? '');
+      item.appendChild(when);
+
+      target.appendChild(item);
+    }
+  }
+
+  async function load(target: HTMLElement): Promise<void> {
+    try {
+      const res = await fetch('/api/guestbook');
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        showText(target, messageFor(data?.error));
+        return;
+      }
+      renderEntries(target, Array.isArray(data?.entries) ? data.entries : []);
+    } catch {
+      showText(target, FALLBACK_ERROR);
+    }
+  }
+
+  if (entries) load(entries);
+</script>

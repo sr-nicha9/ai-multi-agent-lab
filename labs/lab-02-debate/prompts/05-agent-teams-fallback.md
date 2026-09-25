@@ -9,10 +9,12 @@
 Input: docs/PROFILE.md
 
 ลำดับ:
-- ให้แต่ละบทบาทพูดสลับกันอย่างน้อย 2 รอบ
+- ให้แต่ละบทบาทพูดสลับกันอย่างน้อย 5 รอบ
 - facilitator สรุปลง docs/DEBATE.md ภายใต้หัวข้อ ## Brand Strategist, ## UX Critic, ## Devil's Advocate
 - จากนั้นสร้าง docs/DECISIONS.md ตามโครงเดียวกับ labs/lab-02-debate/prompts/04-synthesize-decisions.md (ตาราง D1–D6+, Out of scope, เกณฑ์พร้อม Lab 04)
 
 อย่าเขียนโค้ด Astro
 อย่าใส่ความลับ
+
+บันทึก persistant memory ของแต่ละ agents เพื่อใช้ใน session ถัดไป
 ```

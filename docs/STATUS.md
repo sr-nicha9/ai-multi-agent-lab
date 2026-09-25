@@ -3,12 +3,12 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 +07:00 (ปิด L3 — profile parser)
+Last updated: 2026-09-25 +07:00 (ปิด Lab 02 — DECISIONS D1–D14)
 Updated by: Claude
 
 ## Current goal
 
-- Lab 02 — Debate โครงหน้าเว็บจาก PROFILE แล้วปิดเป็น D-id (`docs/DEBATE.md` เปิดไฟล์ seed แล้ว · ยังไม่มีเนื้อหา)
+- Lab 04 — Frontend ตาม `docs/DECISIONS.md` · **ต้องปิด L6 + L7 (P0) ก่อนให้คนนอกเห็นเว็บ** — ดู "เกณฑ์พร้อม Frontend" ท้าย DECISIONS
 
 ## Done
 
@@ -24,26 +24,32 @@ Updated by: Claude
 
 ## Blocked
 
-- —
+- L2 (เปิด github / linkedin) รอเจ้าของตัดสินใจว่า repo จะเป็น public หรือ private ตาม **D13**
 
 ## Next actions
 
-1. Lab 02 — Debate: เติมเนื้อหาใน `docs/DEBATE.md` ถกทางเลือกโครงหน้าเว็บจาก PROFILE (วัตถุดิบอยู่ใน `## Brainstorm`) แล้วปิดเป็น D-id ใน `docs/DECISIONS.md`
-2. Lab 04 — frontend ดึง PROFILE ขึ้นหน้าเว็บ (อ่าน `## ไม่เผยแพร่บนเว็บ` ก่อนทำ UI) · ระหว่างทางปิด L5 (split Bio เป็นหลาย `<p>`)
+1. Lab 04 — ปิด **L6** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) และ **L7** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) ก่อนงาน copy ทั้งหมด — สองข้อนี้เป็น P0
+2. Lab 04 — ดึง PROFILE ขึ้นหน้าเว็บตาม D11/D12 · ระหว่างทางปิด L5 (split Bio เป็นหลาย `<p>`) และ L9
 3. commit งานที่ค้างใน working tree ก่อนสลับ harness
 
 ## Files changed in latest session
 
-- `src/lib/profile.ts` — export `FALLBACK` + `parseProfile(markdown)` · `loadProfile()` เหลือหน้าที่อ่านไฟล์แล้วส่งต่อ · regex ไม่ใช้ flag `m` อีก
-- `tests/profile.test.ts` (ใหม่ · 9 เคส) — regression guard ของ L3
-- `docs/DEBATE.md` (ใหม่ · seed เปล่า) · `docs/STATUS.md` · `docs/OPEN_LOOPS.md`
-- ค้างจากรอบก่อน ยังไม่ commit: `docs/PROFILE.md` (`## Brainstorm`) · `scripts/preflight.ps1` (em dash → `-`)
+- `docs/DECISIONS.md` (ใหม่) — D1–D14 ปิดจาก debate สามมุม · มี Out of scope v1 และเกณฑ์พร้อม Frontend
+- `docs/DEBATE.md` — เขียนใหม่ทั้งไฟล์: ลำดับการพูด 5 รอบ + `## Brand Strategist` · `## UX Critic` · `## Devil's Advocate` + ประเด็นที่ยังไม่ปิด
+- `.claude/agents/brand-strategist.md` · `ux-critic.md` · `devils-advocate.md` (ใหม่ · `memory: project`)
+- `.claude/agent-memory/{brand-strategist,ux-critic,devils-advocate}/lab-02-debate.md` (ใหม่) — ความจำข้ามเซสชันของแต่ละบทบาท
+- `docs/PROFILE.md` — แก้ `## Headline` (D1) และเพิ่มกติกา 2 ข้อใน `## Tone` (D2, D10) · `npm test` เขียว 12/12 หลังแก้
+- `docs/STATUS.md` · `docs/OPEN_LOOPS.md` (ปิด L4 · เปิด L6–L9 · ยก L2 เป็น P1)
+- ค้างจากรอบก่อน ยังไม่ commit: `scripts/preflight.ps1` (em dash → `-`)
 - `opencode.json` เป็น untracked — **ห้าม commit** ถ้ามี token อยู่ข้างใน
 
 ## Notes
 
-- Proposed vs Approved: brainstorm อยู่ใน `DEBATE.md` — สิ่งที่ปิดแล้วอยู่ใน `DECISIONS.md`
-- ยังไม่มี `docs/DECISIONS.md` → Latest D-id = ไม่มี
+- Proposed vs Approved: ที่ยังถกไม่จบอยู่ใน `DEBATE.md` — ที่ปิดแล้วอยู่ใน `DECISIONS.md`
+- **Latest D-id = D14**
+- พบของจริงตอน debate (ยังไม่แก้ · เป็น L6/L7/L8): `guestbook.astro:29` ใช้ `innerHTML` โดยไม่ escape · `index.astro:13` render `Audience:` · API คืน `err.message` ดิบจนคำว่า "Lab 05 OpenCode" โผล่บนหน้าเว็บ
+- `tests/public-site.test.ts` สแกนแค่ static markup — จับข้อความ error ตอน runtime และค่า FALLBACK ไม่ได้ (D8)
 - `PROFILE.md` มีหัวข้อ `## ไม่เผยแพร่บนเว็บ` เป็น guardrail — อ่านก่อนทำ UI
 - L3 เคยถูกบันทึกว่าปิดเมื่อ 2026-09-24 แต่การแก้ไม่เคยอยู่ใน working tree — รอบนี้แก้จริงแล้วและมีเทสต์คุม · **ต้อง commit ก่อนสลับ harness** ไม่งั้นจะหายซ้ำรอยเดิม
+- **เกิดซ้ำรอบที่สอง:** STATUS/OPEN_LOOPS เคยบันทึกว่า Lab 02 ปิดแล้ว (D1–D14) ตั้งแต่รอบก่อน แต่ตรวจ working tree พบว่า `docs/DEBATE.md` ถูกลบ และ `docs/DECISIONS.md` ไม่เคยมีอยู่จริง — มีแต่ผลข้างเคียงใน `PROFILE.md` (Headline/Tone) ที่รอด · รอบนี้เขียน DEBATE + DECISIONS ขึ้นใหม่ให้ D-id ตรงกับที่ OPEN_LOOPS อ้างไว้ (L2→D13 · L6→D5,D6 · L7→D4 · L8→D7,D8 · L9→D2,D12) · **บทเรียน: commit ทันทีที่ปิดงาน อย่ารอจบหลายงาน**
 - `npm run test:labs` ยังแดงตามที่ควรเป็น (Lab 05 / OpenCode เป็นคนเติม `src/lib/db.ts`) — อย่าไปแก้ให้เขียวล่วงหน้า

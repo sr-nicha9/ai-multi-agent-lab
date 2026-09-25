@@ -3,15 +3,16 @@
 > งานค้างที่ยังไม่ปิด · ลบแถวเมื่อเสร็จ
 > Owner = `Claude` | `OpenCode` | `human`
 
-Last updated: 2026-09-25 +07:00 (Lab 05b swarm — ปิด L6 + L8 · เปิด L10 · Claude เป็น writer รอบนี้)
+Last updated: 2026-09-25 +07:00 (Lab 05b swarm รอบ 2 — ปิด L5 L7 L9 L10 · เปิด L11–L15 · Claude เป็น writer รอบนี้)
 
 | ID | Task | Owner | Priority | Issue | Trigger / due | Notes |
 |---|---|---|---|---|---|---|
+| L11 | `POST /api/guestbook` ยังเขียนลง SQLite ได้จริงจากภายนอก — ปิดที่ชั้น route ให้ตอบ `403` + `{"error":"WRITE_DISABLED"}` | OpenCode | **P1** | #2 (ต่อเนื่อง) | ก่อน Lab 08 Ship | **D5 ปิดการเขียนใน v1 แต่รอบก่อนปิดแค่ UI** · ยืนยันด้วย request จริงบน localhost ได้ **201** โดยไม่ผ่านหน้าเว็บ · ข้อเสนอเต็มพร้อมโค้ดตัวอย่างอยู่ใน [`docs/be-guestbook-write-policy.md`](be-guestbook-write-policy.md) (OpenCode เขียนเอง ทาง headless one-shot) · handoff: [`docs/handoffs/05b-claude-to-opencode.md`](handoffs/05b-claude-to-opencode.md) · **ห้ามแตะ `src/lib/db.ts`** ไม่งั้น `test:labs` แดง |
+| L12 | ล้าง `data/site.sqlite` หรือยืนยันว่า production เริ่มจาก volume ว่าง ก่อน deploy | OpenCode | **P1** | — | ก่อน Lab 08 Ship | `GET /api/guestbook` เปิดอยู่ · row ที่เขียนไว้ตอนพัฒนาจะถูกเผยแพร่ถ้า volume เดิมติดไปด้วย · ตอนนี้ตาราง guestbook ว่างแล้ว (ลบ payload ทดสอบไปหลังตรวจ XSS) แต่ `contact_messages` ยังมี 3 แถวจากการทดสอบ — ไม่ถูก GET เปิดเผย แต่ไม่ควรติดไป production |
 | L2 | ตัดสินใจ repo public/private ก่อน แล้วค่อยเติม `github:` / `linkedin:` ใน `docs/PROFILE.md` | human | **P1** | #7 | ก่อน Lab 08 Ship | ยกระดับจาก P2 ตาม **D13** — เปิดลิงก์ GitHub = เผยแพร่ `docs/` ทั้งโฟลเดอร์ รวมหัวข้อ `## ไม่เผยแพร่บนเว็บ` · `demo@example.com` ห้ามขึ้นเว็บจริง (D9) |
-| L7 | ลบบรรทัด `Audience:` ออกจากหน้าแรก + แก้ `FALLBACK.audience` | Claude | **P0** | #1 | ก่อนให้คนนอกเห็นเว็บ | `src/pages/index.astro:13` render ค่า audience ออกหน้าแรก = ประกาศว่ากำลังหางาน · `src/lib/profile.ts:25` fallback เป็น `Hiring managers / peers / community` ต้องแก้ด้วย · ตาม **D4** |
-| L10 | ขยาย regex ของ guardrail `tests/public-site.test.ts` ให้จับคำว่า course / workshop / OpenCode ไม่ใช่แค่ lab + ตัวเลข และ "แล็บ" | Claude | P1 | — | Lab 06 | พิสูจน์แล้วว่ารั่วจริง: `BaseLayout.astro:6` เคย default description เป็น `Personal branding site for the multi-agent course` ซึ่งหลุดออก meta ของทุกหน้าโดย `npm test` ไม่ฟ้อง · ตัวข้อความแก้แล้วในรอบ swarm แต่ตัวดักยังไม่ได้ขยาย |
-| L9 | เขียน `## Interests` ใหม่เป็น `หัวข้อ — คำขยาย` + เรียบเรียง Bio ย่อหน้า 2 | Claude | P1 | #4 | Lab 04 | ตาม **D12 + D2** · สัญญา `{ interests: string[] }` ไม่เปลี่ยน UI แค่ split ที่ `—` · Headline และ `## Tone` แก้ไปแล้วในรอบ Lab 02 |
-| L5 | Bio หลายย่อหน้าถูก render เป็นก้อนเดียว | Claude | P2 | #4 | Lab 04 | `src/pages/index.astro:12` และ `src/pages/about.astro:10` ใช้ `<p>{profile.bio}</p>` · หลังปิด L3 ตัว parser คืน Bio ครบ 4 ย่อหน้าแล้ว แต่ HTML ยุบบรรทัดว่าง — ต้อง split `\n\n` เป็นหลาย `<p>` ตอนทำ UI |
+| L13 | เพดานขนาด body + รหัส `BAD_JSON` → 400 สำหรับทุก endpoint ที่รับ POST | OpenCode | P2 | — | ก่อน Lab 08 Ship | `request.json()` อ่านทั้งก้อนเข้าหน่วยความจำก่อน validate · และ JSON พังตอนนี้ได้ code `INTERNAL` แต่ status ตก fallback ไม่ตรงกันระหว่าง contact (500) กับ guestbook (400) · ที่มา: ข้อสังเกตข้อ 2–3 ใน `docs/be-guestbook-write-policy.md` |
+| L14 | guardrail ยังไม่ครอบ `FALLBACK` ใน `src/lib/profile.ts` | Claude | P2 | — | Lab 06 | `tests/public-site.test.ts` สแกนเฉพาะ `.astro`/`.html` · ค่า `FALLBACK` เป็น `.ts` จึงไม่ถูกสแกน ทั้งที่ถูก render ออกเว็บจริงเมื่อหัวข้อใน PROFILE ว่าง · เพิ่มเคสใน `tests/profile.test.ts` แทน |
+| L15 | ตรวจ a11y ที่เทสต์อัตโนมัติจับไม่ได้ — focus ring ตอน Tab · contrast AA · ลำดับ heading | Claude | P2 | #6 | Lab 06 QA | **D14** · ส่วน title/description ต่อหน้าและ h1 เดียวต่อหน้า ปิดไปแล้วในรอบ swarm 2 (ยืนยันทั้ง 5 หน้าด้วย request จริง) · เหลือส่วนที่ต้องดูด้วยตา/Playwright |
 
 ## ปิดแล้ว (ย่อ — ย้ายหรือลบได้เมื่อรก)
 
@@ -22,6 +23,10 @@ Last updated: 2026-09-25 +07:00 (Lab 05b swarm — ปิด L6 + L8 · เป�
 | L4 | Lab 02 debate (Brand / UX / Devil's Advocate) → ปิดเป็น D1–D14 ใน `docs/DECISIONS.md` | 2026-09-25 |
 | L6 | Guestbook อ่านอย่างเดียว · render ด้วย `textContent` · ออกจาก nav (issue #2 · D5+D6) | 2026-09-25 |
 | L8 | UI แปลรหัส error เป็นภาษาคน แยก 501/400/500 ทั้ง contact และ guestbook (issue #3 · D8) | 2026-09-25 |
+| L5 | Bio split `\n\n` เป็นหลาย `<p>` ที่หน้า About · หน้าแรกแสดงย่อหน้าแรกแล้วลิงก์ไปอ่านต่อ (issue #4) | 2026-09-25 |
+| L7 | ลบ `Audience:` ออกจากหน้าแรก + แก้ `FALLBACK.audience` และ `FALLBACK.bio` (issue #1 · D4 · D10) | 2026-09-25 |
+| L9 | `## Interests` เป็น `หัวข้อ — คำขยาย` + เรียบเรียง Bio ย่อหน้า 2–4 ตาม tone (issue #4 · D2 · D12) | 2026-09-25 |
+| L10 | ขยาย guardrail ให้จับ course / workshop / bootcamp / opencode และสแกน string literal ใน frontmatter | 2026-09-25 |
 
 ## กฎสั้น
 

@@ -3,23 +3,24 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 +07:00 (Lab 05 — เติม `src/lib/db.ts` + API error contract · OpenCode)
-Updated by: OpenCode
+Last updated: 2026-09-25 +07:00 (Lab 05b swarm รอบ 2 — frontend content pass · Claude)
+Updated by: Claude
 
 ## Current goal
 
-- Lab 04 — Frontend ตาม `docs/DECISIONS.md` · **ต้องปิด issue #1 + #2 (P0) ก่อนให้คนนอกเห็นเว็บ** — ดู "เกณฑ์พร้อม Frontend" ท้าย DECISIONS
+- ปิดงาน backend ที่เหลือ (**L11** `POST /api/guestbook` → 403 · **L12** ล้าง `data/` ก่อน deploy) — **owner คือ OpenCode** · handoff รออยู่ที่ [`docs/handoffs/05b-claude-to-opencode.md`](handoffs/05b-claude-to-opencode.md)
+- หลังจากนั้น → Lab 06 QA (Playwright · a11y ที่เทสต์อัตโนมัติจับไม่ได้ = L15)
 
 ## Done
 
 - Lab 00 — project init, agents, hot state, skill `public-site-safe`
-- Lab 01 — สัมภาษณ์ 9 ข้อ แล้วเขียน `docs/PROFILE.md` แทน stub (ชื่อ Nichanan · สาย IT เขียนโค้ด/สร้างระบบ ที่ใช้ AI เร่งงาน · audience = HR + ลูกค้าฟรีแลนซ์)
-- แก้ `scripts/preflight.ps1` — em dash (—) ในไฟล์ UTF-8 ไม่มี BOM ทำให้ Windows PowerShell 5.1 parse พัง · เปลี่ยนเป็น `-` แล้ว preflight PASSED
-- Brainstorm ก่อน Lab 02 — ขยายไอเดียจาก PROFILE แล้วบันทึกเป็นหัวข้อ `## Brainstorm` ใน `docs/PROFILE.md` (Must/Nice/Later 10 ข้อ · มุมเล่าเรื่องหน้า About 3 แบบ · สิ่งที่ควรหลีกเลี่ยงด้าน privacy และ scope) · ยังเป็น Proposed ยังไม่ปิดเป็น D-id
-- **L3 ปิดแล้ว** — แก้ parser `src/lib/profile.ts` ด้วย TDD: เขียน `tests/profile.test.ts` ก่อน (แดง 5 เคส · `expected 'First paragraph.' to contain 'Second paragraph.'`) แยก `parseProfile(markdown)` ออกจาก `loadProfile()` เพื่อเทสต์ได้โดยไม่แตะดิสก์ แล้วตัด flag `m` ออกจาก regex · `npm test` เขียว 12/12 (3 ไฟล์) · `npm run build` ผ่าน · Bio ได้ครบ 4 ย่อหน้า · Interests ครบ 4 ข้อ
-
-- Lab 03 — แปลง `docs/DECISIONS.md` เป็น GitHub issues 7 ใบใน `sr-nicha9/ai-multi-agent-lab` ผ่าน GitHub MCP · ตรวจซ้ำด้วย `gh issue list` · เขียน `## Lab 03 — Issues ที่สร้างจาก Decisions` และ `## Lab 03 — MCP vs gh` ท้าย DECISIONS · ผูก issue number เข้ากับ open loops แล้ว
-- Lab 05 (backend, OpenCode) — implement `insertContact` / `listGuestbook` / `insertGuestbook` บน better-sqlite3 พร้อมชั้น validate ใน `db.ts` (trim · จำกัดความยาวตาม `maxlength` ของฟอร์ม · email format) · API `/api/contact` + `/api/guestbook` บันทึกลง SQLite แล้วและเลิกส่ง `err.message` ดิบ — ส่งเฉพาะรหัส `NOT_IMPLEMENTED`(501) / `VALIDATION`(400) / `INTERNAL`(500) ตาม D7 · `npm run test:labs` เขียว 2/2 · `npm test` เขียว 12/12 · `npm run build` ผ่าน
+- Lab 01 — สัมภาษณ์ 9 ข้อ แล้วเขียน `docs/PROFILE.md` แทน stub (Nichanan · สาย IT เขียนโค้ด/ออกแบบระบบ ใช้ AI เร่งงาน · audience = HR + ลูกค้าฟรีแลนซ์)
+- Lab 02 — debate 3 บทบาท → ปิดเป็น **D1–D14** ใน `docs/DECISIONS.md`
+- Lab 03 — แปลง decisions เป็น GitHub issues 7 ใบใน `sr-nicha9/ai-multi-agent-lab` ผ่าน MCP · ตรวจซ้ำด้วย `gh issue list`
+- L3 — แก้ parser `src/lib/profile.ts` ด้วย TDD (regex flag `m`) + `tests/profile.test.ts`
+- Lab 05 (OpenCode) — เติม `src/lib/db.ts` + ชั้น validate · API ส่งเฉพาะรหัสสั้น `NOT_IMPLEMENTED`(501) / `VALIDATION`(400) / `INTERNAL`(500) ตาม D7 · `test:labs` เขียว
+- **Lab 05b swarm รอบ 1** (20/20 turns) — ปิด **L6 + L8**: guestbook เป็นหน้าอ่านอย่างเดียว render ด้วย `createElement`+`textContent` ไม่มี `innerHTML` เหลือใน `src/` · ออกจาก nav · UI แปลรหัส error เป็นภาษาไทยทั้ง contact และ guestbook · แก้ default meta description ที่มีคำว่า "course" หลุดออกทุกหน้า · commit `dbd9392`
+- **Lab 05b swarm รอบ 2** (13/20 turns) — ปิด **L5 L7 L9 L10**: หน้าแรกเลิก render `audience` และลบการ์ด Guestbook ที่รอบ 1 ตกหล่น · `FALLBACK.audience`/`FALLBACK.bio` ไม่ใช่ข้อความหางาน/“เร็ว ๆ นี้” แล้ว · Bio split เป็นย่อหน้าจริง · Interests เป็น `หัวข้อ — คำขยาย` · About เล่าด้วยมุม B ปิดท้ายมุม C ตาม D3 · guardrail ขยายให้จับ course/workshop/opencode และสแกน string literal ใน frontmatter · commit `816384f` · ดู [`docs/SWARM.md`](SWARM.md)
 
 ## In progress
 
@@ -27,31 +28,28 @@ Updated by: OpenCode
 
 ## Blocked
 
-- L2 (เปิด github / linkedin) รอเจ้าของตัดสินใจว่า repo จะเป็น public หรือ private ตาม **D13**
+- **L2** (เปิด github / linkedin) รอเจ้าของตัดสินใจว่า repo จะเป็น public หรือ private ตาม **D13** — agent ตัดสินแทนไม่ได้
 
 ## Next actions
 
-1. `git push` — local นำหน้า origin อยู่ · issues อ้าง `docs/DECISIONS.md` ที่ยังไม่ขึ้น remote
-2. Lab 04 — **#2 ปิดแล้ว (Lab 05b)** · เหลือ **issue #1** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) และ **issue #2** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) ก่อนงาน copy ทั้งหมด — สองใบนี้เป็น P0 · **เร่งด่วนขึ้น**: POST `/api/guestbook` ทำงานจริงแล้ว หน้า `guestbook.astro:29` ที่ยังใช้ `innerHTML` จะกลายเป็น stored XSS ได้ทันทีที่ขึ้นเว็บ
-3. Lab 04 — ปิด #4 #5 #6 ต่อ · **#3 ฝั่ง API เสร็จแล้ว** (Lab 05) — เหลือฝั่ง UI แปลรหัส `NOT_IMPLEMENTED`/`VALIDATION`/`INTERNAL` เป็นภาษาคนตาม D8
-4. #7 รอเจ้าของตัดสิน repo public/private — agent ตัดสินแทนไม่ได้
+1. **OpenCode** — รับ handoff `05b-claude-to-opencode.md` แล้วทำ **L11** (route ตอบ 403 `WRITE_DISABLED` ตามข้อเสนอทาง B ใน `docs/be-guestbook-write-policy.md` ที่ OpenCode เขียนเอง) · **ห้ามแตะ `src/lib/db.ts`** ไม่งั้น `test:labs` แดง
+2. **OpenCode** — **L12** ล้าง `data/site.sqlite` ก่อน deploy · **L13** `BAD_JSON` → 400 + เพดานขนาด body
+3. `git push` — local ยังนำหน้า origin อยู่ (issues อ้าง `docs/DECISIONS.md` ที่ยังไม่ขึ้น remote)
+4. **Claude** — Lab 06 QA: **L15** focus ring / contrast AA · **L14** guardrail ครอบ `FALLBACK` ใน `profile.ts`
 
 ## Files changed in latest session
 
-- `src/lib/db.ts` — เติม 3 functions: validate + insert · ลบ stubs `NOT_IMPLEMENTED`
-- `src/pages/api/contact.ts` — POST บันทึกจริง · error → รหัสสั้น (D7)
-- `src/pages/api/guestbook.ts` — GET/POST บันทึกจริง · error → รหัสสั้น (D7)
+- UI: `src/pages/index.astro` · `about.astro` · `interests.astro` · `contact.astro` · `guestbook.astro` · `src/layouts/BaseLayout.astro` · `src/lib/profile.ts`
+- Tests: `tests/public-site.test.ts` (เพิ่ม 5 เคส · รวม 17)
+- Docs: `PROFILE.md` · `SWARM.md` · `OPEN_LOOPS.md` · `be-guestbook-write-policy.md` · `handoffs/05b-claude-to-opencode.md`
+- **ไม่แตะเลย:** `src/lib/db.ts` · `src/pages/api/*` (ownership = OpenCode)
 
 ## Notes
 
-- Proposed vs Approved: ที่ยังถกไม่จบอยู่ใน `DEBATE.md` — ที่ปิดแล้วอยู่ใน `DECISIONS.md`
-- **Latest D-id = D14**
-- พบของจริงตอน debate (ยังไม่แก้ · เป็น L6/L7/L8): `guestbook.astro:29` ใช้ `innerHTML` โดยไม่ escape · `index.astro:13` render `Audience:` · API คืน `err.message` ดิบจนคำว่า "Lab 05 OpenCode" โผล่บนหน้าเว็บ
-- `tests/public-site.test.ts` สแกนแค่ static markup — จับข้อความ error ตอน runtime และค่า FALLBACK ไม่ได้ (D8)
-- `PROFILE.md` มีหัวข้อ `## ไม่เผยแพร่บนเว็บ` เป็น guardrail — อ่านก่อนทำ UI
-- L3 เคยถูกบันทึกว่าปิดเมื่อ 2026-09-24 แต่การแก้ไม่เคยอยู่ใน working tree — รอบนี้แก้จริงแล้วและมีเทสต์คุม · **ต้อง commit ก่อนสลับ harness** ไม่งั้นจะหายซ้ำรอยเดิม
-- **เกิดซ้ำรอบที่สอง:** STATUS/OPEN_LOOPS เคยบันทึกว่า Lab 02 ปิดแล้ว (D1–D14) ตั้งแต่รอบก่อน แต่ตรวจ working tree พบว่า `docs/DEBATE.md` ถูกลบ และ `docs/DECISIONS.md` ไม่เคยมีอยู่จริง — มีแต่ผลข้างเคียงใน `PROFILE.md` (Headline/Tone) ที่รอด · รอบนี้เขียน DEBATE + DECISIONS ขึ้นใหม่ให้ D-id ตรงกับที่ OPEN_LOOPS อ้างไว้ (L2→D13 · L6→D5,D6 · L7→D4 · L8→D7,D8 · L9→D2,D12) · **บทเรียน: commit ทันทีที่ปิดงาน อย่ารอจบหลายงาน**
-- `npm run test:labs` **เขียวแล้ว** (2026-09-25 · Lab 05/OpenCode เติม `src/lib/db.ts` แล้ว)
-- รหัส error ของ API ตอนนี้คือ `NOT_IMPLEMENTED`(501) / `VALIDATION`(400) / `INTERNAL`(500) — UI ยังพิมพ์ `data.error` ดิบอยู่ แต่ค่าที่ได้เป็นรหัสสั้น ไม่มีชื่อคอร์ส/ internals แล้ว · งานแปลเป็นภาษาคน = L8 ฝั่ง Claude
-- ลำดับ validate: trim ก่อนนับความยาว · ลิมิต server-side ตั้งให้ตรงกับ `maxlength` ของฟอร์ม (name 80 · email 120 · contact message 2000 · guestbook message 500) · `listGuestbook` คืนใหม่→เก่า จำกัด 200 แถว
-- `.playwright-mcp/` เป็น untracked จากรอบก่อน — ไม่ใช่ของรอบนี้ · **ห้าม commit**
+- Proposed vs Approved: ที่ยังถกไม่จบอยู่ใน `DEBATE.md` — ที่ปิดแล้วอยู่ใน `DECISIONS.md` · **Latest D-id = D14** (รอบ swarm ไม่มี decision ใหม่)
+- **บทเรียนที่เกิดซ้ำสองรอบ: commit ทันทีที่ปิดงาน อย่ารอจบหลายงาน** — เคยมีทั้งกรณี L3 ที่ STATUS บอกว่าปิดแล้วแต่โค้ดไม่เคยอยู่ใน working tree และกรณี `DEBATE.md`/`DECISIONS.md` ที่หายไปทั้งไฟล์
+- **บทเรียนรอบ swarm: decision ที่พูดถึง "ปิดฟีเจอร์" ต้องไล่ปิดทุกชั้น** — D5 ปิด guestbook แต่รอบแรกปิดแค่ UI ส่วน API ยังเขียนได้ และรอบแรกลบลิงก์ใน nav แต่ลืมการ์ดหน้าแรก · เวลาปิดอะไร ให้ grep หาทุกจุดที่อ้างถึงก่อนเคลมว่าปิดแล้ว
+- `tests/public-site.test.ts` เป็น static scan — จับข้อความ error ตอน runtime และค่าที่มาจาก `docs/PROFILE.md` ไม่ได้ (D8 · L14)
+- `PROFILE.md` มีหัวข้อ `## ไม่เผยแพร่บนเว็บ` เป็น guardrail — อ่านก่อนทำ UI ทุกครั้ง
+- `.playwright-mcp/` เป็น untracked จาก Playwright MCP — **ห้าม commit**
+- ข้อมูลทดสอบใน `data/site.sqlite`: guestbook ว่างแล้ว (ลบ payload XSS ทดสอบออกหลังตรวจ) · `contact_messages` ยังมี 3 แถว — ต้องล้างก่อน deploy (L12)

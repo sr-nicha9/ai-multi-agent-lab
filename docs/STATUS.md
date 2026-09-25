@@ -32,7 +32,7 @@ Updated by: OpenCode
 ## Next actions
 
 1. `git push` — local นำหน้า origin อยู่ · issues อ้าง `docs/DECISIONS.md` ที่ยังไม่ขึ้น remote
-2. Lab 04 — ปิด **issue #1** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) และ **issue #2** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) ก่อนงาน copy ทั้งหมด — สองใบนี้เป็น P0 · **เร่งด่วนขึ้น**: POST `/api/guestbook` ทำงานจริงแล้ว หน้า `guestbook.astro:29` ที่ยังใช้ `innerHTML` จะกลายเป็น stored XSS ได้ทันทีที่ขึ้นเว็บ
+2. Lab 04 — **#2 ปิดแล้ว (Lab 05b)** · เหลือ **issue #1** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) และ **issue #2** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) ก่อนงาน copy ทั้งหมด — สองใบนี้เป็น P0 · **เร่งด่วนขึ้น**: POST `/api/guestbook` ทำงานจริงแล้ว หน้า `guestbook.astro:29` ที่ยังใช้ `innerHTML` จะกลายเป็น stored XSS ได้ทันทีที่ขึ้นเว็บ
 3. Lab 04 — ปิด #4 #5 #6 ต่อ · **#3 ฝั่ง API เสร็จแล้ว** (Lab 05) — เหลือฝั่ง UI แปลรหัส `NOT_IMPLEMENTED`/`VALIDATION`/`INTERNAL` เป็นภาษาคนตาม D8
 4. #7 รอเจ้าของตัดสิน repo public/private — agent ตัดสินแทนไม่ได้
 

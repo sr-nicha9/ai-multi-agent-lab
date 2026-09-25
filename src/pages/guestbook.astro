@@ -1,46 +1,27 @@
 ---
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
+/**
+ * Closed in v1 by decision D5, and deliberately inert.
+ *
+ * The earlier version built entries with innerHTML from names and messages
+ * supplied by visitors (D6) — a stored XSS the moment the API starts
+ * returning rows. Rather than patch the escaping on a feature nobody asked
+ * for yet, the page keeps no form and makes no request at all. It stays
+ * reachable so existing links do not 404, and it is not in the nav.
+ *
+ * Reopening this needs three things first: escaping, length and shape
+ * validation in src/lib/db.ts (owned by the backend agent), and a way to
+ * remove a message.
+ */
 ---
-<BaseLayout title="Guestbook">
+<BaseLayout
+  title="Guestbook"
+  description="สมุดเยี่ยมยังไม่เปิดใช้งาน"
+>
   <section class="card">
     <h1>Guestbook</h1>
-    <p>ฝากข้อความไว้ได้ทางฟอร์มนี้ — อ่าน/เขียนผ่าน <code>/api/guestbook</code></p>
-    <form id="gb-form">
-      <label for="name">Name</label>
-      <input id="name" name="name" required maxlength="80" />
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="3" required maxlength="500"></textarea>
-      <p style="margin-top:1rem"><button type="submit">Sign</button></p>
-    </form>
-    <div id="entries" class="card" style="margin-top:1.25rem" aria-live="polite">Loading…</div>
+    <p>สมุดเยี่ยมยังไม่เปิดใช้งาน</p>
+    <p>ถ้าอยากติดต่อเรื่องงานหรือมีคำถาม ส่งผ่าน <a href="/contact">ฟอร์มติดต่อ</a> ได้เลย</p>
   </section>
 </BaseLayout>
-<script>
-  const entries = document.getElementById('entries');
-  const form = document.getElementById('gb-form');
-  async function load() {
-    const res = await fetch('/api/guestbook');
-    const data = await res.json();
-    if (!res.ok) {
-      entries.textContent = data.error || `HTTP ${res.status}`;
-      return;
-    }
-    entries.innerHTML = (data.entries || [])
-      .map((e) => `<p><strong>${e.name}</strong>: ${e.message}<br/><small>${e.created_at}</small></p>`)
-      .join('') || '<p>No entries yet.</p>';
-  }
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const payload = Object.fromEntries(new FormData(form).entries());
-    await fetch('/api/guestbook', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
-    form.reset();
-    await load();
-  });
-  load();
-</script>
-

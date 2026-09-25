@@ -3,7 +3,15 @@ interface Props {
   title?: string;
   description?: string;
 }
-const { title = 'Personal Site', description = 'Personal branding site for the multi-agent course' } = Astro.props;
+// Every page passes its own title and description (D14) — these defaults are
+// only a safety net and must stay free of course wording.
+const {
+  title = 'Personal site',
+  description = 'เว็บส่วนตัว — งานที่ทำ หัวข้อที่ถนัด และช่องทางติดต่อ',
+} = Astro.props;
+const path = Astro.url.pathname;
+const isCurrent = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
 ---
 <!doctype html>
 <html lang="th">
@@ -11,60 +19,86 @@ const { title = 'Personal Site', description = 'Personal branding site for the m
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <style is:global>
+      /* Tone from docs/PROFILE.md: deep blue on a light ground, clean and easy
+         to read, nothing loud. Contrast pairs here clear WCAG AA (D14). */
       :root {
-        --bg: #0b1020;
-        --card: #141a2f;
-        --text: #eef2ff;
-        --muted: #a5b4d4;
-        --accent: #7c9cff;
-        --border: #243056;
+        --bg: #f6f8fc;
+        --card: #ffffff;
+        --text: #12203d;
+        --muted: #47587a;
+        --accent: #1d4ed8;
+        --accent-soft: #eaf0ff;
+        --border: #dae1f0;
       }
       * { box-sizing: border-box; }
       body {
         margin: 0;
         font-family: "Segoe UI", system-ui, sans-serif;
-        background: radial-gradient(circle at top, #17203a, var(--bg) 45%);
+        background: var(--bg);
         color: var(--text);
         min-height: 100vh;
       }
       a { color: var(--accent); text-decoration: none; }
       a:hover { text-decoration: underline; }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+        border-radius: 4px;
+      }
       main { width: min(920px, 92vw); margin: 0 auto; padding: 2rem 0 4rem; }
       .card {
-        background: color-mix(in srgb, var(--card) 92%, white 8%);
+        background: var(--card);
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 1.25rem 1.5rem;
         margin: 1rem 0;
       }
       nav {
-        display: flex; gap: 1rem; flex-wrap: wrap;
+        display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
         width: min(920px, 92vw); margin: 0 auto; padding: 1.25rem 0;
         border-bottom: 1px solid var(--border);
       }
       nav a { color: var(--muted); font-weight: 600; }
       nav a[aria-current="page"] { color: var(--text); }
+      /* Contact is the single call to action (D11) — weight and a soft pill,
+         not a loud colour. */
+      nav a.cta {
+        margin-left: auto;
+        color: var(--accent);
+        background: var(--accent-soft);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 0.35rem 0.95rem;
+      }
       h1, h2 { line-height: 1.2; }
-      p, li { color: var(--muted); line-height: 1.6; }
+      p, li { color: var(--muted); line-height: 1.7; }
+      .lede { color: var(--text); font-size: 1.15rem; }
+      .eyebrow { margin: 0; color: var(--accent); font-weight: 700; letter-spacing: 0.02em; }
       input, textarea, button {
         font: inherit; border-radius: 10px; border: 1px solid var(--border);
-        background: #0f1528; color: var(--text); padding: 0.7rem 0.9rem; width: 100%;
+        background: var(--card); color: var(--text); padding: 0.7rem 0.9rem; width: 100%;
       }
-      button { background: var(--accent); color: #081018; font-weight: 700; cursor: pointer; width: auto; }
+      button {
+        background: var(--accent); color: #ffffff; border-color: var(--accent);
+        font-weight: 700; cursor: pointer; width: auto;
+      }
       label { display: block; margin: 0.75rem 0 0.35rem; color: var(--text); font-weight: 600; }
       .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+      .interest-title { display: block; color: var(--text); font-weight: 600; }
     </style>
   </head>
   <body>
     <nav aria-label="หลัก">
-      <a href="/" aria-current={Astro.url.pathname === '/' ? 'page' : undefined}>Home</a>
-      <a href="/about" aria-current={Astro.url.pathname.startsWith('/about') ? 'page' : undefined}>About</a>
-      <a href="/interests" aria-current={Astro.url.pathname.startsWith('/interests') ? 'page' : undefined}>Interests</a>
-      <a href="/contact" aria-current={Astro.url.pathname.startsWith('/contact') ? 'page' : undefined}>Contact</a>
-      <a href="/guestbook" aria-current={Astro.url.pathname.startsWith('/guestbook') ? 'page' : undefined}>Guestbook</a>
+      <a href="/" aria-current={isCurrent('/') ? 'page' : undefined}>Home</a>
+      <a href="/about" aria-current={isCurrent('/about') ? 'page' : undefined}>About</a>
+      <a href="/interests" aria-current={isCurrent('/interests') ? 'page' : undefined}>Interests</a>
+      <a class="cta" href="/contact" aria-current={isCurrent('/contact') ? 'page' : undefined}>Contact</a>
     </nav>
     <main>
       <slot />

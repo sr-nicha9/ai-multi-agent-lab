@@ -16,13 +16,17 @@ export type Profile = {
 /**
  * FALLBACK renders publicly when docs/PROFILE.md is missing or a section is
  * empty — keep it course-free (no lab references); learner hints belong in
- * comments and docs, not in rendered fallback text.
+ * comments and docs, not in rendered fallback text. Keep it free of
+ * job-seeking wording and of "coming soon" style promises (D2, D4, D10):
+ * `audience` is an internal note about who the copy is written for and is
+ * never rendered, but the field stays on the type because docs/PROFILE.md
+ * still carries the section and tests assert on it.
  */
 export const FALLBACK: Profile = {
   name: 'Your Name',
   headline: 'Personal branding site',
-  bio: 'This personal site is still being built — content is coming soon.',
-  audience: 'Hiring managers / peers / community',
+  bio: 'A personal site about building software: what I work on, what I write about, and how to get in touch.',
+  audience: 'General visitors',
   interests: ['AI agents', 'Web', 'Teaching'],
 };
 

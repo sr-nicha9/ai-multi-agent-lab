@@ -2,13 +2,48 @@
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
+
 const profile = loadProfile();
+
+// Bio is one string with blank lines between paragraphs (docs/PROFILE.md).
+// Render one <p> per paragraph instead of collapsing it into a single block.
+const bioParagraphs = profile.bio
+  .split(/\n\s*\n/)
+  .map((p) => p.trim())
+  .filter(Boolean);
+
+const description =
+  'เขียนโค้ดและออกแบบระบบ โดยจัด AI หลายตัวให้แบ่งหน้าที่กันทำงาน แล้วส่งมอบงานที่ทีมรับไปทำต่อได้';
 ---
-<BaseLayout title={`About · ${profile.name}`}>
+<BaseLayout title={`About · ${profile.name}`} description={description}>
   <article class="card">
     <h1>About</h1>
-    <p>{profile.bio}</p>
-    <p>เรื่องราวเพิ่มเติม — timeline, skills และลิงก์จะอัปเดตเร็ว ๆ นี้</p>
+
+    <p class="lead">
+      ทำให้ AI หลายตัวทำงานร่วมกันได้ — ไม่ใช่ถามทีละคำถามแล้วก๊อบคำตอบมาใช้
+      แต่แบ่งให้แต่ละตัวรับผิดชอบคนละส่วนของงาน ประสานกันผ่านเอกสารและ PR
+      ผลที่ได้จึงเป็นงานที่เปิดดูได้ว่าใครทำอะไรไว้ ไม่ใช่กล่องดำที่มีแต่คนสั่งเข้าใจ
+    </p>
+
+    {bioParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+    <h2>ร่วมงานกันแล้วได้อะไร</h2>
+    <p>
+      รับงานตั้งแต่คุยความต้องการ ออกแบบระบบ ลงมือเขียน ไปจนถึงส่งมอบพร้อมเอกสาร
+      ที่คนรับช่วงอ่านแล้วทำต่อเองได้ — เป้าหมายคือพาโปรเจ็คให้เดินจบ ไม่ใช่ส่งแค่โค้ดแล้วจบกัน
+    </p>
+    <p>
+      มีงานที่อยากให้ช่วย เล่ารายละเอียดมาทาง <a href="/contact">ฟอร์มติดต่อ</a> ได้เลย
+    </p>
   </article>
 </BaseLayout>
 
+<style>
+  .lead {
+    font-size: 1.15rem;
+    color: var(--text);
+  }
+  h2 {
+    margin-top: 2rem;
+  }
+</style>

@@ -1,9 +1,11 @@
 ---
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { loadProfile } from '../lib/profile';
+const profile = loadProfile();
 ---
 <BaseLayout
-  title="Contact"
+  title={`Contact · ${profile.name}`}
   description="ส่งข้อความถึง Nichanan ได้โดยตรงผ่านฟอร์มติดต่อบนหน้านี้"
 >
   <section class="card">

@@ -2,15 +2,63 @@
 export const prerender = false;
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { loadProfile } from '../lib/profile';
+
 const profile = loadProfile();
+
+// Each interest is written as `หัวข้อ — คำขยาย` in docs/PROFILE.md. The data
+// contract stays string[]; only the display splits on the em dash, and items
+// written without one still render as a plain topic.
+const items = profile.interests.map((raw) => {
+  const [topic, ...rest] = raw.split('—');
+  return { topic: topic.trim(), detail: rest.join('—').trim() };
+});
+
+const description =
+  'สิ่งที่รับทำได้จริง — AI agents ในงานจริง, automation งานซ้ำ, web app ตั้งแต่หน้าจอถึงฐานข้อมูล';
 ---
-<BaseLayout title={`Interests · ${profile.name}`}>
+<BaseLayout title={`Interests · ${profile.name}`} description={description}>
   <section class="card">
     <h1>Interests</h1>
-    <ul>
-      {profile.interests.map((item) => <li>{item}</li>)}
+    <p class="lead">สิ่งที่ทำมาแล้วและรับทำต่อได้ — พร้อมผลลัพธ์ที่ได้จริงในแต่ละเรื่อง</p>
+
+    <ul class="interests">
+      {items.map((item) => (
+        <li>
+          <span class="topic">{item.topic}</span>
+          {item.detail ? <span class="detail">{item.detail}</span> : null}
+        </li>
+      ))}
     </ul>
-    <p>อัปเดตรายการสิ่งที่สนใจเร็ว ๆ นี้</p>
+
+    <p>
+      มีโจทย์ที่ตรงกับเรื่องพวกนี้ ส่งรายละเอียดมาทาง <a href="/contact">ฟอร์มติดต่อ</a> ได้เลย
+    </p>
   </section>
 </BaseLayout>
 
+<style>
+  .lead {
+    color: var(--text);
+  }
+  .interests {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 1.5rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .interests li {
+    border-left: 3px solid var(--accent);
+    padding-left: 0.9rem;
+  }
+  .topic {
+    display: block;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .detail {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--muted);
+  }
+</style>

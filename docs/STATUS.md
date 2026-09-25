@@ -3,8 +3,8 @@
 > อ่านทุก session · **สั้น** · single-writer ต่อรอบ
 > ดู [`COURSE.md`](../COURSE.md) ชั้น State (Hot)
 
-Last updated: 2026-09-25 +07:00 (ปิด Lab 03 — issues #1–#7)
-Updated by: Claude
+Last updated: 2026-09-25 +07:00 (Lab 05 — เติม `src/lib/db.ts` + API error contract · OpenCode)
+Updated by: OpenCode
 
 ## Current goal
 
@@ -19,6 +19,7 @@ Updated by: Claude
 - **L3 ปิดแล้ว** — แก้ parser `src/lib/profile.ts` ด้วย TDD: เขียน `tests/profile.test.ts` ก่อน (แดง 5 เคส · `expected 'First paragraph.' to contain 'Second paragraph.'`) แยก `parseProfile(markdown)` ออกจาก `loadProfile()` เพื่อเทสต์ได้โดยไม่แตะดิสก์ แล้วตัด flag `m` ออกจาก regex · `npm test` เขียว 12/12 (3 ไฟล์) · `npm run build` ผ่าน · Bio ได้ครบ 4 ย่อหน้า · Interests ครบ 4 ข้อ
 
 - Lab 03 — แปลง `docs/DECISIONS.md` เป็น GitHub issues 7 ใบใน `sr-nicha9/ai-multi-agent-lab` ผ่าน GitHub MCP · ตรวจซ้ำด้วย `gh issue list` · เขียน `## Lab 03 — Issues ที่สร้างจาก Decisions` และ `## Lab 03 — MCP vs gh` ท้าย DECISIONS · ผูก issue number เข้ากับ open loops แล้ว
+- Lab 05 (backend, OpenCode) — implement `insertContact` / `listGuestbook` / `insertGuestbook` บน better-sqlite3 พร้อมชั้น validate ใน `db.ts` (trim · จำกัดความยาวตาม `maxlength` ของฟอร์ม · email format) · API `/api/contact` + `/api/guestbook` บันทึกลง SQLite แล้วและเลิกส่ง `err.message` ดิบ — ส่งเฉพาะรหัส `NOT_IMPLEMENTED`(501) / `VALIDATION`(400) / `INTERNAL`(500) ตาม D7 · `npm run test:labs` เขียว 2/2 · `npm test` เขียว 12/12 · `npm run build` ผ่าน
 
 ## In progress
 
@@ -31,21 +32,15 @@ Updated by: Claude
 ## Next actions
 
 1. `git push` — local นำหน้า origin อยู่ · issues อ้าง `docs/DECISIONS.md` ที่ยังไม่ขึ้น remote
-2. Lab 04 — ปิด **issue #1** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) และ **issue #2** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) ก่อนงาน copy ทั้งหมด — สองใบนี้เป็น P0
-3. Lab 04 — ปิด #4 #5 #6 ต่อ · #3 ฝั่ง UI ทำได้เลย ฝั่ง API รอ Lab 05 (OpenCode)
+2. Lab 04 — ปิด **issue #1** (ลบ `Audience:` จากหน้าแรก + แก้ `FALLBACK.audience`) และ **issue #2** (guestbook เลิกใช้ `innerHTML` · ปิดการเขียน · ออกจาก nav) ก่อนงาน copy ทั้งหมด — สองใบนี้เป็น P0 · **เร่งด่วนขึ้น**: POST `/api/guestbook` ทำงานจริงแล้ว หน้า `guestbook.astro:29` ที่ยังใช้ `innerHTML` จะกลายเป็น stored XSS ได้ทันทีที่ขึ้นเว็บ
+3. Lab 04 — ปิด #4 #5 #6 ต่อ · **#3 ฝั่ง API เสร็จแล้ว** (Lab 05) — เหลือฝั่ง UI แปลรหัส `NOT_IMPLEMENTED`/`VALIDATION`/`INTERNAL` เป็นภาษาคนตาม D8
 4. #7 รอเจ้าของตัดสิน repo public/private — agent ตัดสินแทนไม่ได้
 
 ## Files changed in latest session
 
-- `docs/DECISIONS.md` (ใหม่) — D1–D14 ปิดจาก debate สามมุม · มี Out of scope v1 และเกณฑ์พร้อม Frontend
-- `docs/DEBATE.md` — เขียนใหม่ทั้งไฟล์: ลำดับการพูด 5 รอบ + `## Brand Strategist` · `## UX Critic` · `## Devil's Advocate` + ประเด็นที่ยังไม่ปิด
-- `.claude/agents/brand-strategist.md` · `ux-critic.md` · `devils-advocate.md` (ใหม่ · `memory: project`)
-- `.claude/agent-memory/{brand-strategist,ux-critic,devils-advocate}/lab-02-debate.md` (ใหม่) — ความจำข้ามเซสชันของแต่ละบทบาท
-- Lab 03: `docs/DECISIONS.md` (เพิ่ม 2 หัวข้อท้ายไฟล์) · `docs/OPEN_LOOPS.md` (เพิ่มคอลัมน์ Issue)
-- `docs/PROFILE.md` — แก้ `## Headline` (D1) และเพิ่มกติกา 2 ข้อใน `## Tone` (D2, D10) · `npm test` เขียว 12/12 หลังแก้
-- `docs/STATUS.md` · `docs/OPEN_LOOPS.md` (ปิด L4 · เปิด L6–L9 · ยก L2 เป็น P1)
-- ค้างจากรอบก่อน ยังไม่ commit: `scripts/preflight.ps1` (em dash → `-`)
-- `opencode.json` เป็น untracked — **ห้าม commit** ถ้ามี token อยู่ข้างใน
+- `src/lib/db.ts` — เติม 3 functions: validate + insert · ลบ stubs `NOT_IMPLEMENTED`
+- `src/pages/api/contact.ts` — POST บันทึกจริง · error → รหัสสั้น (D7)
+- `src/pages/api/guestbook.ts` — GET/POST บันทึกจริง · error → รหัสสั้น (D7)
 
 ## Notes
 
@@ -56,4 +51,7 @@ Updated by: Claude
 - `PROFILE.md` มีหัวข้อ `## ไม่เผยแพร่บนเว็บ` เป็น guardrail — อ่านก่อนทำ UI
 - L3 เคยถูกบันทึกว่าปิดเมื่อ 2026-09-24 แต่การแก้ไม่เคยอยู่ใน working tree — รอบนี้แก้จริงแล้วและมีเทสต์คุม · **ต้อง commit ก่อนสลับ harness** ไม่งั้นจะหายซ้ำรอยเดิม
 - **เกิดซ้ำรอบที่สอง:** STATUS/OPEN_LOOPS เคยบันทึกว่า Lab 02 ปิดแล้ว (D1–D14) ตั้งแต่รอบก่อน แต่ตรวจ working tree พบว่า `docs/DEBATE.md` ถูกลบ และ `docs/DECISIONS.md` ไม่เคยมีอยู่จริง — มีแต่ผลข้างเคียงใน `PROFILE.md` (Headline/Tone) ที่รอด · รอบนี้เขียน DEBATE + DECISIONS ขึ้นใหม่ให้ D-id ตรงกับที่ OPEN_LOOPS อ้างไว้ (L2→D13 · L6→D5,D6 · L7→D4 · L8→D7,D8 · L9→D2,D12) · **บทเรียน: commit ทันทีที่ปิดงาน อย่ารอจบหลายงาน**
-- `npm run test:labs` ยังแดงตามที่ควรเป็น (Lab 05 / OpenCode เป็นคนเติม `src/lib/db.ts`) — อย่าไปแก้ให้เขียวล่วงหน้า
+- `npm run test:labs` **เขียวแล้ว** (2026-09-25 · Lab 05/OpenCode เติม `src/lib/db.ts` แล้ว)
+- รหัส error ของ API ตอนนี้คือ `NOT_IMPLEMENTED`(501) / `VALIDATION`(400) / `INTERNAL`(500) — UI ยังพิมพ์ `data.error` ดิบอยู่ แต่ค่าที่ได้เป็นรหัสสั้น ไม่มีชื่อคอร์ส/ internals แล้ว · งานแปลเป็นภาษาคน = L8 ฝั่ง Claude
+- ลำดับ validate: trim ก่อนนับความยาว · ลิมิต server-side ตั้งให้ตรงกับ `maxlength` ของฟอร์ม (name 80 · email 120 · contact message 2000 · guestbook message 500) · `listGuestbook` คืนใหม่→เก่า จำกัด 200 แถว
+- `.playwright-mcp/` เป็น untracked จากรอบก่อน — ไม่ใช่ของรอบนี้ · **ห้าม commit**

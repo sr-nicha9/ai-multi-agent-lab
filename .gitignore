@@ -10,6 +10,7 @@ data/
 .mcp.json
 .claude/settings.local.json
 .claude/agent-memory-local/
+opencode.json
 !opencode.json.example
 !.claude/settings.json.example
 
